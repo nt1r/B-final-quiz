@@ -4,6 +4,8 @@ import com.example.demo.dto.GroupDto;
 import com.example.demo.entity.Trainee;
 import com.example.demo.entity.Trainer;
 import com.example.demo.entity.TrainingGroup;
+import com.example.demo.exception.GroupNameRepeatedException;
+import com.example.demo.exception.GroupNotFoundException;
 import com.example.demo.repository.GroupRepository;
 import com.example.demo.repository.TraineeRepository;
 import com.example.demo.repository.TrainerRepository;
@@ -103,5 +105,21 @@ public class GroupService {
     public List<GroupDto> getGroups() {
         List<TrainingGroup> groups = groupRepository.findTopNById(trainerRepository.count() / TRAINER_IN_EACH_GROUP);
         return ConvertUtil.convertTrainingGroupList2GroupDto(groups);
+    }
+
+    public void renameGroupById(Long id, String newName) {
+        if (!isGroupIdExist(id)) {
+            throw new GroupNotFoundException(id);
+        }
+        TrainingGroup group = groupRepository.findById(id).get();
+        if (group.getName().equals(newName)) {
+            throw new GroupNameRepeatedException();
+        }
+        group.setName(newName);
+        groupRepository.save(group);
+    }
+
+    private boolean isGroupIdExist(Long id) {
+        return groupRepository.findById(id).isPresent();
     }
 }

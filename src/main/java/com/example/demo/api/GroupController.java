@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.dto.GroupDto;
+import com.example.demo.dto.RenameTeamRequestDto;
 import com.example.demo.service.GroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +25,10 @@ public class GroupController {
     @GetMapping
     public List<GroupDto> getGroups() {
         return groupService.getGroups();
+    }
+
+    @PatchMapping("/{group_id}")
+    public void renameGroupById(@PathVariable("group_id") Long id, @RequestBody RenameTeamRequestDto renameTeamRequestDto) {
+        groupService.renameGroupById(id, renameTeamRequestDto.getNewName());
     }
 }

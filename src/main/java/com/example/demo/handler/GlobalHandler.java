@@ -1,6 +1,8 @@
 package com.example.demo.handler;
 
 import com.example.demo.dto.ErrorResponse;
+import com.example.demo.exception.GroupNameRepeatedException;
+import com.example.demo.exception.GroupNotFoundException;
 import com.example.demo.exception.TraineeNotFoundException;
 import com.example.demo.exception.TrainerNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,22 @@ public class GlobalHandler {
     @ExceptionHandler(TrainerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleTraineeNotFoundException(TrainerNotFoundException exception) {
+        return ErrorResponse.builder()
+                .message(exception.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(GroupNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleTraineeNotFoundException(GroupNotFoundException exception) {
+        return ErrorResponse.builder()
+                .message(exception.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(GroupNameRepeatedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleTraineeNotFoundException(GroupNameRepeatedException exception) {
         return ErrorResponse.builder()
                 .message(exception.getMessage())
                 .build();

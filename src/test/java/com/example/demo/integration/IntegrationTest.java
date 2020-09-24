@@ -1,5 +1,6 @@
 package com.example.demo.integration;
 
+import com.example.demo.dto.RenameTeamRequestDto;
 import com.example.demo.dto.TraineeDto;
 import com.example.demo.dto.TrainerDto;
 import com.example.demo.service.TraineeService;
@@ -35,6 +36,7 @@ public class IntegrationTest {
 
     private final String autoGroupingUrl = "/groups/auto-grouping";
     private final String getAllGroupsUrl = "/groups/";
+    private final String renameGroupUrl = "/groups/%d";
 
     private TraineeDto sampleTraineeDto;
     private TrainerDto sampleTrainerDto;
@@ -49,6 +51,8 @@ public class IntegrationTest {
     private JacksonTester<TraineeDto> traineeDtoJacksonTester;
     @Autowired
     private JacksonTester<TrainerDto> trainerDtoJacksonTester;
+    @Autowired
+    private JacksonTester<RenameTeamRequestDto> renameTeamRequestDtoJacksonTester;
 
     @BeforeEach
     void setUp() {
@@ -271,6 +275,54 @@ public class IntegrationTest {
                         .characterEncoding("UTF-8"))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$", hasSize(4)));
+            }
+
+            @Test
+            void should_rename_success() throws Exception {
+                mockMvc.perform(post(autoGroupingUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
+
+                mockMvc.perform(get(getAllGroupsUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
+
+                mockMvc.perform(patch(String.format(renameGroupUrl, 1L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(renameTeamRequestDtoJacksonTester.write(new RenameTeamRequestDto("T.O.P")).getJson()))
+                        .andExpect(status().isOk());
+            }
+        }
+
+        @Nested
+        class SadPaths {
+            @Test
+            void should_return_not_found_when_group_id_not_exist() throws Exception {
+                mockMvc.perform(post(autoGroupingUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
+
+                mockMvc.perform(get(getAllGroupsUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
+
+                mockMvc.perform(patch(String.format(renameGroupUrl, 100L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(renameTeamRequestDtoJacksonTester.write(new RenameTeamRequestDto("T.O.P")).getJson()))
+                        .andExpect(status().isNotFound());
+            }
+
+            @Test
+            void should_return_not_found_when_group_name_repeated() throws Exception {
+                mockMvc.perform(post(autoGroupingUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
+
+                mockMvc.perform(get(getAllGroupsUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"));
+
+                mockMvc.perform(patch(String.format(renameGroupUrl, 2L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(renameTeamRequestDtoJacksonTester.write(new RenameTeamRequestDto("2 组")).getJson()))
+                        .andExpect(status().isBadRequest());
             }
         }
     }
