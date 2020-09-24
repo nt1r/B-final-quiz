@@ -29,4 +29,10 @@ public class TraineeController {
     public List<Trainee> getAllTrainees(@RequestParam("grouped") boolean isGrouped) {
         return traineeService.getAllTrainees(isGrouped);
     }
+
+    @DeleteMapping("/{trainee_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOneTrainee(@PathVariable("trainee_id") Long id) {
+        traineeService.deleteOneTrainee(id);
+    }
 }

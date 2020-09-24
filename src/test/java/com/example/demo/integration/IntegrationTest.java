@@ -17,8 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,8 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureJsonTesters
 public class IntegrationTest {
     private final String addOneTraineeUrl = "/trainees";
-    private final String addOneTrainerUrl = "/trainers";
     private final String getAllTraineesUrl = "/trainees?grouped=%s";
+    private final String deleteOneTraineeUrl = "/trainees/%d";
+
+    private final String addOneTrainerUrl = "/trainers";
     private final String getAllTrainersUrl = "/trainers?grouped=%s";
 
     private TraineeDto sampleTraineeDto;
@@ -79,8 +80,14 @@ public class IntegrationTest {
             void should_get_all_trainees_not_grouped() throws Exception {
                 mockMvc.perform(get(String.format(getAllTraineesUrl, "false")).accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", hasSize(35)));
+                        .andExpect(status().isOk());
+            }
+
+            @Test
+            void should_delete_trainee_by_id() throws Exception {
+                mockMvc.perform(delete(String.format(deleteOneTraineeUrl, 1L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isNoContent());
             }
         }
 
@@ -177,6 +184,14 @@ public class IntegrationTest {
                         .andExpect(jsonPath("$.details.github", is("github字段不能为空")))
                         .andExpect(jsonPath("$.details.zoomId", is("zoom字段不能为空")));
             }
+
+            @Test
+            void should_return_not_found_when_id_not_exist() throws Exception {
+                mockMvc.perform(delete(String.format(deleteOneTraineeUrl, 100L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.message", is("Trainee ID 100 Not Found")));
+            }
         }
     }
 
@@ -196,8 +211,7 @@ public class IntegrationTest {
             void should_get_all_trainers() throws Exception {
                 mockMvc.perform(get(String.format(getAllTrainersUrl, "false")).accept(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8"))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$", hasSize(9)));
+                        .andExpect(status().isOk());
             }
         }
 

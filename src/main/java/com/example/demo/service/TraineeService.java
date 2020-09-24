@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.TraineeDto;
 import com.example.demo.entity.Trainee;
+import com.example.demo.exception.TraineeNotFoundException;
 import com.example.demo.repository.TraineeRepository;
 import com.example.demo.util.ConvertUtil;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,16 @@ public class TraineeService {
 
     public List<Trainee> getAllTrainees(boolean isGrouped) {
         return traineeRepository.findAllByIsGrouped(isGrouped);
+    }
+
+    public void deleteOneTrainee(Long id) {
+        if (!isTraineeExists(id)) {
+            throw new TraineeNotFoundException(id);
+        }
+        traineeRepository.deleteById(id);
+    }
+
+    private boolean isTraineeExists(Long id) {
+        return traineeRepository.findById(id).isPresent();
     }
 }
