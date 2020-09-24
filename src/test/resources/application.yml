@@ -9,3 +9,5 @@ spring:
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.MySQL5Dialect
+    naming:
+      physical-strategy: org.hibernate:boot.model.naming.PhysicalNamingStrategyStandardImpl

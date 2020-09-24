@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Trainee;
+import com.example.demo.entity.Trainer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GroupDto {
+    Long id;
     String name;
-    List<TraineeDto> memberList;
+    List<Trainee> trainees;
+    List<Trainer> trainers;
 }

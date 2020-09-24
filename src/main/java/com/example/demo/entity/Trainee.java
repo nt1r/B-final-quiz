@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -37,7 +37,7 @@ public class Trainee {
     @NotBlank
     String zoomId;
 
-    @NotNull
-    @Builder.Default
-    boolean isGrouped = false;
+    @ManyToOne
+    @JsonIgnore
+    TrainingGroup trainingGroup;
 }

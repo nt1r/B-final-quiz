@@ -73,11 +73,12 @@ public class TraineeService {
 
     public Trainee addOneTrainee(TraineeDto traineeDto) {
         Trainee trainee = ConvertUtil.convertTraineeDto2Trainee(traineeDto);
+        System.out.println(trainee);
         return traineeRepository.save(trainee);
     }
 
     public List<Trainee> getAllTrainees(boolean isGrouped) {
-        return traineeRepository.findAllByIsGrouped(isGrouped);
+        return isGrouped ? traineeRepository.findAllGrouped() : traineeRepository.findAllNotGrouped();
     }
 
     public void deleteOneTrainee(Long id) {

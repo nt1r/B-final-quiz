@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.TraineeDto;
 import com.example.demo.dto.TrainerDto;
-import com.example.demo.entity.Trainee;
 import com.example.demo.entity.Trainer;
-import com.example.demo.exception.TraineeNotFoundException;
 import com.example.demo.exception.TrainerNotFoundException;
 import com.example.demo.repository.TrainerRepository;
 import com.example.demo.util.ConvertUtil;
@@ -48,7 +45,7 @@ public class TrainerService {
     }
 
     public List<Trainer> getAllTrainers(boolean isGrouped) {
-        return trainerRepository.findAllByIsGrouped(isGrouped);
+        return isGrouped ? trainerRepository.findAllGrouped() : trainerRepository.findAllNotGrouped();
     }
 
     public void deleteOneTrainer(Long id) {

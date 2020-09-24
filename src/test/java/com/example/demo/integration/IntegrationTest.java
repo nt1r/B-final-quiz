@@ -33,6 +33,8 @@ public class IntegrationTest {
     private final String getAllTrainersUrl = "/trainers?grouped=%s";
     private final String deleteOneTrainerUrl = "/trainers/%d";
 
+    private final String autoGroupingUrl = "/groups/auto-grouping";
+
     private TraineeDto sampleTraineeDto;
     private TrainerDto sampleTrainerDto;
 
@@ -243,6 +245,20 @@ public class IntegrationTest {
                         .characterEncoding("UTF-8"))
                         .andExpect(status().isNotFound())
                         .andExpect(jsonPath("$.message", is("Trainer ID 100 Not Found")));
+            }
+        }
+    }
+
+    @Nested
+    class GroupTest {
+        @Nested
+        class HappyPaths {
+            @Test
+            void should_auto_grouping() throws Exception {
+                mockMvc.perform(post(autoGroupingUrl).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", hasSize(4)));
             }
         }
     }
