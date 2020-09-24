@@ -1,14 +1,13 @@
 package com.example.demo.api;
 
-import com.example.demo.dto.TraineeDto;
 import com.example.demo.dto.TrainerDto;
-import com.example.demo.entity.Trainee;
 import com.example.demo.entity.Trainer;
 import com.example.demo.service.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -24,5 +23,10 @@ public class TrainerController {
     @ResponseStatus(HttpStatus.CREATED)
     public Trainer addOneTrainer(@RequestBody @Valid TrainerDto trainerDto) {
         return trainerService.addOneTrainer(trainerDto);
+    }
+
+    @GetMapping
+    public List<Trainer> getAllTrainers(@RequestParam("grouped") boolean isGrouped) {
+        return trainerService.getAllTrainers(isGrouped);
     }
 }

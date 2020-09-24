@@ -35,4 +35,7 @@ public class Trainee {
 
     @NotNull
     String zoomId;
+
+    @NotNull
+    boolean isGrouped = false;
 }

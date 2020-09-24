@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -22,5 +23,10 @@ public class TraineeController {
     @ResponseStatus(HttpStatus.CREATED)
     public Trainee addOneTrainee(@RequestBody @Valid TraineeDto traineeDto) {
         return traineeService.addOneTrainee(traineeDto);
+    }
+
+    @GetMapping
+    public List<Trainee> getAllTrainees(@RequestParam("grouped") boolean isGrouped) {
+        return traineeService.getAllTrainees(isGrouped);
     }
 }

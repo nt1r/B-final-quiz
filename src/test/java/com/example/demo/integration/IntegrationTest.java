@@ -5,6 +5,7 @@ import com.example.demo.dto.TrainerDto;
 import com.example.demo.service.TraineeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -15,8 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,9 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-public class TraineeIntegrationTest {
+public class IntegrationTest {
     private final String addOneTraineeUrl = "/trainees";
     private final String addOneTrainerUrl = "/trainers";
+    private final String getAllTraineesUrl = "/trainees?grouped=%s";
+    private final String getAllTrainersUrl = "/trainers?grouped=%s";
 
     private TraineeDto sampleTraineeDto;
     private TrainerDto sampleTrainerDto;
@@ -56,16 +59,52 @@ public class TraineeIntegrationTest {
     void loadContext() {
     }
 
-    @Test
-    void should_create_new_trainee() throws Exception {
-        addSampleTrainee()
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$", hasKey("id")))
-                .andExpect(jsonPath("$.name", is("张三")))
-                .andExpect(jsonPath("$.office", is("武汉")))
-                .andExpect(jsonPath("$.email", is("san.zhang@thoughtworks.com")))
-                .andExpect(jsonPath("$.github", is("https://github.com/zhangsan")))
-                .andExpect(jsonPath("$.zoomId", is("12345678")));
+    @Nested
+    class TraineeTest {
+        @Nested
+        class HappyPaths {
+            @Test
+            void should_create_new_trainee() throws Exception {
+                addSampleTrainee()
+                        .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$", hasKey("id")))
+                        .andExpect(jsonPath("$.name", is("张三")))
+                        .andExpect(jsonPath("$.office", is("武汉")))
+                        .andExpect(jsonPath("$.email", is("san.zhang@thoughtworks.com")))
+                        .andExpect(jsonPath("$.github", is("https://github.com/zhangsan")))
+                        .andExpect(jsonPath("$.zoomId", is("12345678")));
+            }
+
+            @Test
+            void should_get_all_trainees_not_grouped() throws Exception {
+                mockMvc.perform(get(String.format(getAllTraineesUrl, "false")).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", hasSize(35)));
+            }
+        }
+    }
+
+    @Nested
+    class TrainerTest {
+        @Nested
+        class HappyPaths {
+            @Test
+            void should_create_new_trainer() throws Exception {
+                addSampleTrainer()
+                        .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$", hasKey("id")))
+                        .andExpect(jsonPath("$.name", is("张三")));
+            }
+
+            @Test
+            void should_get_all_trainers() throws Exception {
+                mockMvc.perform(get(String.format(getAllTrainersUrl, "false")).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$", hasSize(9)));
+            }
+        }
     }
 
     private ResultActions addSampleTrainee() throws Exception {
@@ -73,14 +112,6 @@ public class TraineeIntegrationTest {
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(traineeDtoJacksonTester.write(sampleTraineeDto).getJson()));
-    }
-
-    @Test
-    void should_create_new_trainer() throws Exception {
-        addSampleTrainer()
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$", hasKey("id")))
-                .andExpect(jsonPath("$.name", is("张三")));
     }
 
     private ResultActions addSampleTrainer() throws Exception {

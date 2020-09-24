@@ -21,4 +21,7 @@ public class Trainer {
 
     @NotNull
     String name;
+
+    @NotNull
+    boolean isGrouped = false;
 }
