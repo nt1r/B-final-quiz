@@ -31,6 +31,7 @@ public class IntegrationTest {
 
     private final String addOneTrainerUrl = "/trainers";
     private final String getAllTrainersUrl = "/trainers?grouped=%s";
+    private final String deleteOneTrainerUrl = "/trainers/%d";
 
     private TraineeDto sampleTraineeDto;
     private TrainerDto sampleTrainerDto;
@@ -213,6 +214,13 @@ public class IntegrationTest {
                         .characterEncoding("UTF-8"))
                         .andExpect(status().isOk());
             }
+
+            @Test
+            void should_delete_trainer_by_id() throws Exception {
+                mockMvc.perform(delete(String.format(deleteOneTrainerUrl, 1L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isNoContent());
+            }
         }
 
         @Nested
@@ -227,6 +235,14 @@ public class IntegrationTest {
                         .andExpect(jsonPath("$", hasKey("details")))
                         .andExpect(jsonPath("$.details", aMapWithSize(1)))
                         .andExpect(jsonPath("$.details.name", is("姓名字段不能为空")));
+            }
+
+            @Test
+            void should_return_not_found_when_id_not_exist() throws Exception {
+                mockMvc.perform(delete(String.format(deleteOneTrainerUrl, 100L)).accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.message", is("Trainer ID 100 Not Found")));
             }
         }
     }

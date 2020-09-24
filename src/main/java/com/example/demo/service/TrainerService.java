@@ -4,6 +4,8 @@ import com.example.demo.dto.TraineeDto;
 import com.example.demo.dto.TrainerDto;
 import com.example.demo.entity.Trainee;
 import com.example.demo.entity.Trainer;
+import com.example.demo.exception.TraineeNotFoundException;
+import com.example.demo.exception.TrainerNotFoundException;
 import com.example.demo.repository.TrainerRepository;
 import com.example.demo.util.ConvertUtil;
 import org.springframework.stereotype.Service;
@@ -47,5 +49,16 @@ public class TrainerService {
 
     public List<Trainer> getAllTrainers(boolean isGrouped) {
         return trainerRepository.findAllByIsGrouped(isGrouped);
+    }
+
+    public void deleteOneTrainer(Long id) {
+        if (!isTrainerExists(id)) {
+            throw new TrainerNotFoundException(id);
+        }
+        trainerRepository.deleteById(id);
+    }
+
+    private boolean isTrainerExists(Long id) {
+        return trainerRepository.findById(id).isPresent();
     }
 }

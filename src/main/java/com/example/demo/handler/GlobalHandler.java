@@ -2,6 +2,7 @@ package com.example.demo.handler;
 
 import com.example.demo.dto.ErrorResponse;
 import com.example.demo.exception.TraineeNotFoundException;
+import com.example.demo.exception.TrainerNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +33,14 @@ public class GlobalHandler {
     @ExceptionHandler(TraineeNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleTraineeNotFoundException(TraineeNotFoundException exception) {
+        return ErrorResponse.builder()
+                .message(exception.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(TrainerNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleTraineeNotFoundException(TrainerNotFoundException exception) {
         return ErrorResponse.builder()
                 .message(exception.getMessage())
                 .build();
