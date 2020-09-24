@@ -28,7 +28,7 @@ public class GroupService {
         this.groupRepository = groupRepository;
     }
 
-    public List<GroupDto> autoGroup() {
+    public List<GroupDto> autoGrouping() {
         List<Trainee> allTrainees = traineeRepository.findAll();
         List<Trainer> allTrainers = trainerRepository.findAll();
 
@@ -98,5 +98,10 @@ public class GroupService {
             group.getTrainers().add(allTrainers.get(trainerIndex));
             groupIndex = (groupIndex + 1) % groups.size();
         }
+    }
+
+    public List<GroupDto> getGroups() {
+        List<TrainingGroup> groups = groupRepository.findTopNById(trainerRepository.count() / TRAINER_IN_EACH_GROUP);
+        return ConvertUtil.convertTrainingGroupList2GroupDto(groups);
     }
 }

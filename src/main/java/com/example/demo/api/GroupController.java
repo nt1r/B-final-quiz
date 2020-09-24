@@ -2,10 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.dto.GroupDto;
 import com.example.demo.service.GroupService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +17,12 @@ public class GroupController {
     }
 
     @PostMapping("/auto-grouping")
-    public List<GroupDto> autoGroup() {
-        return groupService.autoGroup();
+    public List<GroupDto> autoGrouping() {
+        return groupService.autoGrouping();
+    }
+
+    @GetMapping
+    public List<GroupDto> getGroups() {
+        return groupService.getGroups();
     }
 }
