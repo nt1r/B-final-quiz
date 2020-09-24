@@ -83,6 +83,101 @@ public class IntegrationTest {
                         .andExpect(jsonPath("$", hasSize(35)));
             }
         }
+
+        @Nested
+        class SadPaths {
+            @Test
+            void should_return_bad_request_when_name_is_empty() throws Exception {
+                sampleTraineeDto.setName("");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.name", is("姓名字段不能为空")));
+            }
+
+            @Test
+            void should_return_bad_request_when_office_is_empty() throws Exception {
+                sampleTraineeDto.setOffice("");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.office", is("办公室字段不能为空")));
+            }
+
+            @Test
+            void should_return_bad_request_when_email_is_empty() throws Exception {
+                sampleTraineeDto.setEmail("");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.email", is("邮箱字段不能为空")));
+            }
+
+            @Test
+            void should_return_bad_request_when_email_is_invalid() throws Exception {
+                sampleTraineeDto.setEmail("qweqwe");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.email", is("邮箱格式不正确")));
+            }
+
+            @Test
+            void should_return_bad_request_when_github_is_empty() throws Exception {
+                sampleTraineeDto.setGithub("");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.github", is("github字段不能为空")));
+            }
+
+            @Test
+            void should_return_bad_request_when_zoom_is_empty() throws Exception {
+                sampleTraineeDto.setZoomId("");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.zoomId", is("zoom字段不能为空")));
+            }
+
+            @Test
+            void should_return_bad_request_when_multiple_fields_is_invalid() throws Exception {
+                sampleTraineeDto.setName("");
+                sampleTraineeDto.setOffice("");
+                sampleTraineeDto.setEmail("");
+                sampleTraineeDto.setGithub("");
+                sampleTraineeDto.setZoomId("");
+                addSampleTrainee()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(5)))
+                        .andExpect(jsonPath("$.details.name", is("姓名字段不能为空")))
+                        .andExpect(jsonPath("$.details.office", is("办公室字段不能为空")))
+                        .andExpect(jsonPath("$.details.email", is("邮箱字段不能为空")))
+                        .andExpect(jsonPath("$.details.github", is("github字段不能为空")))
+                        .andExpect(jsonPath("$.details.zoomId", is("zoom字段不能为空")));
+            }
+        }
     }
 
     @Nested

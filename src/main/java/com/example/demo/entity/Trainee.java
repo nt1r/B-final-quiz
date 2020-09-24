@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -20,22 +21,23 @@ public class Trainee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull
+    @NotBlank
     String name;
 
-    @NotNull
+    @NotBlank
     String office;
 
-    @NotNull
+    @NotBlank
     @Email
     String email;
 
-    @NotNull
+    @NotBlank
     String github;
 
-    @NotNull
+    @NotBlank
     String zoomId;
 
     @NotNull
+    @Builder.Default
     boolean isGrouped = false;
 }

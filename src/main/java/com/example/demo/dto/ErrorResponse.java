@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TrainerDto {
-    @NotBlank(message = "姓名字段不能为空")
-    String name;
+public class ErrorResponse {
+    String message;
+    Map<String, String> details;
 }

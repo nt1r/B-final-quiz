@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -19,9 +20,10 @@ public class Trainer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull
+    @NotBlank
     String name;
 
     @NotNull
+    @Builder.Default
     boolean isGrouped = false;
 }
