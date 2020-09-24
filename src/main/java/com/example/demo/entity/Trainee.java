@@ -1,31 +1,38 @@
-package com.example.demo.dto;
+package com.example.demo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Builder
-public class TraineeDto {
-    @NotNull(message = "名称字段不能为空")
+@Table(name = "trainee")
+public class Trainee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @NotNull
     String name;
 
-    @NotNull(message = "办公室字段不能为空")
+    @NotNull
     String office;
 
-    @NotNull(message = "邮箱字段不能为空")
-    @Email(message = "邮箱格式不正确")
+    @NotNull
+    @Email
     String email;
 
-    @NotNull(message = "github字段不能为空")
+    @NotNull
     String github;
 
-    @NotNull(message = "zoom字段不能为空")
+    @NotNull
     String zoomId;
 }

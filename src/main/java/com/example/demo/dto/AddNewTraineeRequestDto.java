@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddNewMemberRequestDto {
+public class AddNewTraineeRequestDto {
     String name;
 }
