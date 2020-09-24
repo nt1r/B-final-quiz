@@ -200,6 +200,21 @@ public class IntegrationTest {
                         .andExpect(jsonPath("$", hasSize(9)));
             }
         }
+
+        @Nested
+        class SadPaths {
+            @Test
+            void should_return_bad_request_when_name_is_empty() throws Exception {
+                sampleTrainerDto.setName("");
+                addSampleTrainer()
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$", hasKey("message")))
+                        .andExpect(jsonPath("$.message", is("Invalid values.")))
+                        .andExpect(jsonPath("$", hasKey("details")))
+                        .andExpect(jsonPath("$.details", aMapWithSize(1)))
+                        .andExpect(jsonPath("$.details.name", is("姓名字段不能为空")));
+            }
+        }
     }
 
     private ResultActions addSampleTrainee() throws Exception {
