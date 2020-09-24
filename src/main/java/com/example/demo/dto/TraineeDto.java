@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 public class TraineeDto {
-    @NotNull(message = "名称字段不能为空")
+    @NotNull(message = "姓名字段不能为空")
     String name;
 
     @NotNull(message = "办公室字段不能为空")

@@ -1,6 +1,7 @@
 package com.example.demo.integration;
 
 import com.example.demo.dto.TraineeDto;
+import com.example.demo.dto.TrainerDto;
 import com.example.demo.service.TraineeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureJsonTesters
 public class TraineeIntegrationTest {
     private final String addOneTraineeUrl = "/trainees";
+    private final String addOneTrainerUrl = "/trainers";
 
     private TraineeDto sampleTraineeDto;
+    private TrainerDto sampleTrainerDto;
 
     @Autowired
     MockMvc mockMvc;
@@ -36,10 +39,13 @@ public class TraineeIntegrationTest {
 
     @Autowired
     private JacksonTester<TraineeDto> traineeDtoJacksonTester;
+    @Autowired
+    private JacksonTester<TrainerDto> trainerDtoJacksonTester;
 
     @BeforeEach
     void setUp() {
         sampleTraineeDto = new TraineeDto("张三", "武汉", "san.zhang@thoughtworks.com", "https://github.com/zhangsan", "12345678");
+        sampleTrainerDto = new TrainerDto("张三");
     }
 
     @AfterEach
@@ -67,5 +73,20 @@ public class TraineeIntegrationTest {
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(traineeDtoJacksonTester.write(sampleTraineeDto).getJson()));
+    }
+
+    @Test
+    void should_create_new_trainer() throws Exception {
+        addSampleTrainer()
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$", hasKey("id")))
+                .andExpect(jsonPath("$.name", is("张三")));
+    }
+
+    private ResultActions addSampleTrainer() throws Exception {
+        return mockMvc.perform(post(addOneTrainerUrl).accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trainerDtoJacksonTester.write(sampleTrainerDto).getJson()));
     }
 }
