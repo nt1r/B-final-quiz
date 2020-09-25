@@ -25,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
+// GTB: - 测试场景覆盖较全面
+// GTB: - 测试没有使用H2数据库
 public class IntegrationTest {
     private final String addOneTraineeUrl = "/trainees";
     private final String getAllTraineesUrl = "/trainees?grouped=%s";

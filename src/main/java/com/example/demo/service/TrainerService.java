@@ -32,6 +32,7 @@ public class TrainerService {
     }
 
     private void initTrainers() {
+        // GTB: - 可以使用Java8 Stream简化代码
         for (String trainerName : defaultTrainerNameList) {
             TrainerDto trainerDto = new TrainerDto(trainerName);
             Trainer trainer = ConvertUtil.convertTrainerDto2Trainer(trainerDto);

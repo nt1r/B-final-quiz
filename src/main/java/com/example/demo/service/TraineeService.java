@@ -57,6 +57,7 @@ public class TraineeService {
         initTrainees();
     }
 
+    // GTB: - 不应该在应用代码中初始化数据库
     private void initTrainees() {
         for (String traineeName : defaultTraineeNameList) {
             TraineeDto traineeDto = new TraineeDto(
@@ -73,6 +74,7 @@ public class TraineeService {
 
     public Trainee addOneTrainee(TraineeDto traineeDto) {
         Trainee trainee = ConvertUtil.convertTraineeDto2Trainee(traineeDto);
+        // GTB: - 未删除的调试代码
         System.out.println(trainee);
         return traineeRepository.save(trainee);
     }

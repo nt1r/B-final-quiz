@@ -27,6 +27,7 @@ public class GlobalHandler {
         });
 
         return ErrorResponse.builder()
+                // GTB: - magic number
                 .message("Invalid values.")
                 .details(details)
                 .build();
@@ -42,6 +43,7 @@ public class GlobalHandler {
 
     @ExceptionHandler(TrainerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    // GTB: - XxxNotFoundException的异常处理方法可以合并成一个
     public ErrorResponse handleTraineeNotFoundException(TrainerNotFoundException exception) {
         return ErrorResponse.builder()
                 .message(exception.getMessage())

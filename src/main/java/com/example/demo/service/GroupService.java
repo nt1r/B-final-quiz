@@ -31,9 +31,11 @@ public class GroupService {
     }
 
     public List<GroupDto> autoGrouping() {
+        // GTB: - 应该删除旧的分组或者设为逻辑删除
         List<Trainee> allTrainees = traineeRepository.findAll();
         List<Trainer> allTrainers = trainerRepository.findAll();
 
+        // GTB: - 讲师数量不足时应该抛异常
         int groupCount = allTrainers.size() / TRAINER_IN_EACH_GROUP;
         Collections.shuffle(allTrainees);
         Collections.shuffle(allTrainers);
@@ -77,7 +79,9 @@ public class GroupService {
 
     private List<TrainingGroup> initGroupList(int groupCount) {
         List<TrainingGroup> groups = new ArrayList<>();
+        // GTB: - 可以使用Java8 Stream简化代码
         for (int groupIndex = 0; groupIndex < groupCount; ++groupIndex) {
+            // GTB：- 长代码没有换行
             groups.add(TrainingGroup.builder().name((groupIndex + 1) + " 组").trainees(new ArrayList<>()).trainers(new ArrayList<>()).build());
         }
         return groups;
@@ -111,7 +115,9 @@ public class GroupService {
         if (!isGroupIdExist(id)) {
             throw new GroupNotFoundException(id);
         }
+        // GTB: - Optional不能直接get
         TrainingGroup group = groupRepository.findById(id).get();
+        // GTB：- 组名重复不是指与本组的组名重复，而是指与其他组的组名重复
         if (group.getName().equals(newName)) {
             throw new GroupNameRepeatedException();
         }

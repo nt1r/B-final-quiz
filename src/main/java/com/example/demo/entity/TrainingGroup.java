@@ -22,6 +22,7 @@ public class TrainingGroup {
     String name;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "trainingGroup")
+    // GTB: - 集合类型字段一般在字段声明时就初始化为空集合
     List<Trainee> trainees;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "trainingGroup")

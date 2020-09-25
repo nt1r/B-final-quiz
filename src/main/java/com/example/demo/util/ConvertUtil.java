@@ -27,6 +27,7 @@ public class ConvertUtil {
 
     public static List<GroupDto> convertTrainingGroupList2GroupDto(List<TrainingGroup> groups) {
         List<GroupDto> groupDtoList = new ArrayList<>();
+        // GTB: - 可以使用Java8 Stream简化代码
         for (TrainingGroup group: groups) {
             groupDtoList.add(convert(group, GroupDto.class));
         }
